@@ -51,23 +51,36 @@ class phpdbdoc {
     $dsn = "mysql:dbname={$this->information};host={$this->getLinkdb()}";
     try {
       $this->db = new PDO($dsn, $this->getUserdb(), $this->getPassword());
-//      $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $ex) {
       echo 'Connection failed: ' . $e->getMessage();
     }
   }
 
   public function getDoc() {
-    $this->getTables();
+    $tables = $this->getTables();
+    $fields = $this->getFields($tables);
   }
 
   private function getTables() {
-    $mysql = $this->db;
-    $tables = $mysql->query("select TABLE_NAME,TABLE_COMMENT,TABLE_COLLATION, CREATE_TIME from TABLES where TABLE_SCHEMA = '{$this->getDataBase()}'", PDO::FETCH_INTO, $tables_list);
-//    while ($row = $tables->fetch_object()) {
-//      $tables_list[] = $row;
-//    }
-    var_dump($tables_list);
+    $tables = $this->db->prepare("select TABLE_NAME,TABLE_COMMENT,TABLE_COLLATION, CREATE_TIME from TABLES where TABLE_SCHEMA = '{$this->getDataBase()}'");
+    $tables->execute();
+    $tables->setFetchMode(PDO::FETCH_ASSOC);
+    $tables_list = $tables->fetchAll();
+    return $tables_list;
+  }
+
+  private function getFields($tables) {
+    $fields_list = array();
+    foreach ($tables as $table) {
+      $fields = $this->db->prepare("SELECT COLUMN_NAME, IS_NULLABLE, COLUMN_TYPE, COLUMN_KEY, EXTRA, COLUMN_COMMENT "
+          . "FROM COLUMNS "
+          . "WHERE TABLE_SCHEMA = '{$this->getDataBase()}' AND TABLE_NAME = '{$table['TABLE_NAME']}'");
+      $fields->execute();
+      $fields->setFetchMode(PDO::FETCH_ASSOC);
+      $fields_list[$table['TABLE_NAME']] = $fields->fetchAll();
+    }
+//    var_dump($fields_list);
+    return $fields_list;
   }
 
 }
