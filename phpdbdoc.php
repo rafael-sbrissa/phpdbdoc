@@ -59,6 +59,7 @@ class phpdbdoc {
   public function getDoc() {
     $tables = $this->getTables();
     $fields = $this->getFields($tables);
+    $this->render($tables, $fields);
   }
 
   private function getTables() {
@@ -79,8 +80,33 @@ class phpdbdoc {
       $fields->setFetchMode(PDO::FETCH_ASSOC);
       $fields_list[$table['TABLE_NAME']] = $fields->fetchAll();
     }
-//    var_dump($fields_list);
     return $fields_list;
+  }
+
+  private function render($tables, $fields) {
+    echo "<!DOCTYPE html>
+          <html>
+            <head>
+                <title>DB Doc - {$this->getDataBase()}</title>
+                <meta charset=\"UTF-8\">
+                <meta name=\"viewport\" content=\"width = device-width, initial-scale = 1.0\">
+            </head>
+            <body>";
+    echo "<table style=\"border-spacing: 2px;\">
+            <thead>
+                <tr>
+                    <th>Table Name</th>
+                    <th>Comment</th>
+                    <th>Collaction</th>
+                    <th>Create Time</th>
+                </tr>
+            </thead>";
+    echo "</table>";
+
+
+
+    echo "</body>"
+    . "</html>";
   }
 
 }
