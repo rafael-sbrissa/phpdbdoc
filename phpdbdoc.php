@@ -104,6 +104,52 @@ class phpdbdoc {
         echo "<!DOCTYPE html>
           <html>
             <head>
+                <style>
+                    html{
+                        padding: 0;
+                        margin: 0;
+                        border: 0;
+                    }
+                    body{
+                        min-width: 100%;
+                            max-width: 100%;
+                    }
+                    table{
+                        min-width: 100%;
+                        border-width: 2px;
+                        table-layout:auto;
+                        border-style: solid;
+                        border-collapse: collapse;
+                        margin: 10px 0 0 0;
+                        padding: 0;
+                    }
+                    thead{
+                        background-color: #dddbdb;
+                        border-width: 0px;
+                        border-style: none;
+                        padding: 0;
+                        margin: 0;
+                    }
+                    tbody tr:nth-child(odd) {
+                        background-color: #eef1f0;
+                    }
+                    tr td {
+                        border-width: 0px;
+                        border-style: none;
+                        margin: 0;
+                        text-align: center;
+                    }
+                    .table_name{
+                        text-align: left;
+                        background-color: #d9faea;
+                    }
+                    @media print {
+                        body{
+                            max-height: 3508px;
+                            max-width: 2480px;
+                        }
+                    }
+                </style>
                 <title>DB Doc - {$this->getDataBase()}</title>
                 <meta charset=\"UTF-8\">
                 <meta name=\"viewport\" content=\"width = device-width, initial-scale = 1.0\">
@@ -141,7 +187,7 @@ class phpdbdoc {
             echo "<table>
             <thead>
                 <tr>
-                <th colspan=\"6\">{$name}<th>
+                <th colspan=\"6\" class=\"table_name\">{$name}</th>
                 </tr>
                 <tr>
                     <th>Column Name</th>
@@ -182,7 +228,7 @@ class phpdbdoc {
             echo "<table>
             <thead>
                 <tr>
-                <th colspan=\"6\">{$name}<th>
+                <th colspan=\"6\" class=\"table_name\">{$name}</th>
                 </tr>
                 <tr>
                     <th>Constraint Name</th>
